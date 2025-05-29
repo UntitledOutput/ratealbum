@@ -102,7 +102,6 @@
             const percent = Math.round((score / (totalTracks * 10)) * 100);
             //alert(`Your score for ${albumName}: ${percent}%`);
 
-            // Save in localStorage
             localStorage.setItem(id, JSON.stringify({ name: albumName, artist: artist, rating: percent }));
             document.getElementById('album-rating').innerHTML = `Rating: <span class="rating-value" style="color: ${colorFromRating(percent)}">${percent}%</span>`;
             

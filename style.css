@@ -59,14 +59,14 @@ h1 {
 .flex-row {
   display: flex;
   justify-content: space-between;
-  align-items: top; /* ensures same Y position (vertical alignment) */
+  align-items: top; 
   width: 95%;
   padding: 0.5rem 1rem;
 }
 
 
 .cover-wrapper {
-
+  position: fixed;
   justify-content: left;
   width: 30%;
   padding:7.5%;
@@ -75,7 +75,8 @@ h1 {
   align-content: top;
   height: 100%;
   margin-top: 1rem;
-  position: fixed
+
+  top: -0.125rem;
 }
 
 .wrapper a {
