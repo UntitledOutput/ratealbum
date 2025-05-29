@@ -73,10 +73,13 @@ h1 {
   float: left;
   align-items: top;
   align-content: top;
+  align-self: top;
   height: 100%;
-  margin-top: 1rem;
+  margin-top: -7.5rem;
+}
 
-  top: -0.125rem;
+header {
+    z-index: 1000;
 }
 
 .wrapper a {
