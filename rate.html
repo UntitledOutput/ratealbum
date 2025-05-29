@@ -1,0 +1,116 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RateAlbum</title>
+    <link rel="stylesheet" href="style.css"><style></style>
+    <script src="index.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>RateAlbum | Spotify Album Rating Tool</h1>
+        <div class="wrapper" style="height: 10%;">
+            <a href="javascript:history.back()">Back</a>
+    </header>
+    
+    <div class="flex-row" >
+    <div class="cover-wrapper">
+        
+        <img src="null" id="albumCover" alt="Album Cover" class="album-cover">
+        <h2 id="album-name"></h2>
+        <h3 id="artist-name"></h3>
+        <p id="album-rating"></p>
+    </div>
+
+    <div id="trackRating" class="track-rating">
+    </div>
+
+    </div>
+
+    <script>
+
+
+        const queryString = window.location.search;
+        console.log(queryString);
+
+        const urlParams = new URLSearchParams(queryString);
+
+        const albumName = urlParams.get('name');
+        const artistName = urlParams.get('artist');
+        const albumId = urlParams.get('id');
+        console.log(albumName, artistName, albumId);
+
+        document.getElementById('album-name').textContent = albumName;
+        document.getElementById('artist-name').textContent = artistName;
+        //document.getElementById('albumCover').src = albumCover;
+        document.getElementById('albumCover').alt = `${albumName} cover`;
+        document.getElementById('album-rating').textContent = 'Unrated';
+
+        if (localStorage.getItem(albumId)) {
+            const storedData = JSON.parse(localStorage.getItem(albumId));
+            document.getElementById('album-rating').innerHTML = `Rating: <span class="rating-value" style="color: ${colorFromRating(storedData.rating)}">${storedData.rating}%</span>`;
+        } else {
+            document.getElementById('album-rating').textContent = 'Unrated';
+        }
+
+        async function selectAlbum(id, name, artist) {
+            await getToken();
+            const res = await fetch(`https://api.spotify.com/v1/albums/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const album = await res.json();
+
+            const trackDiv = document.getElementById('trackRating');
+            
+            const albumCover = album.images[0].url;
+            document.getElementById('albumCover').src = albumCover;
+
+            document.title = `${name} - ${artist} | RateAlbum`;
+
+            const ratings = [];
+            album.tracks.items.forEach((track, index) => {
+                const inputId = `rating-${index}`;
+                trackDiv.innerHTML += `
+                <div>
+                    Track ${index}: ${track.name}<br>
+                    <br>
+                    <div class="wrapper" style="  height: 3rem; width:100%">
+                        <input class="input" type="number" id="${inputId}" min="0" max="10" value="5">
+                    </div>
+                    <br>
+                </div>
+                `;
+            });
+            
+            trackDiv.innerHTML += `
+            <br>
+            <div class="wrapper" style="  height: 3rem; width:100%">
+            <button class="submitbtn"  onclick="submitRatings('${name}', '${artist}', ${album.tracks.items.length}, '${id}')">Submit Ratings</button>
+            </div>
+            <br>
+            `;
+        }
+
+        function submitRatings(albumName, artist, totalTracks,id) {
+            let score = 0;
+            for (let i = 0; i < totalTracks; i++) {
+                const val = parseInt(document.getElementById(`rating-${i}`).value);
+                score += Math.min(10, Math.max(0, val));
+            }
+
+            const percent = Math.round((score / (totalTracks * 10)) * 100);
+            //alert(`Your score for ${albumName}: ${percent}%`);
+
+            // Save in localStorage
+            localStorage.setItem(id, JSON.stringify({ name: albumName, artist: artist, rating: percent }));
+            document.getElementById('album-rating').innerHTML = `Rating: <span class="rating-value" style="color: ${colorFromRating(percent)}">${percent}%</span>`;
+            
+        }
+
+        selectAlbum(albumId, albumName, artistName);
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RateAlbum</title>
+    <link rel="stylesheet" href="style.css"><style></style>
+    <script src="index.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>RateAlbum | Spotify Album Rating Tool</h1>
+    </header>
+
+    <div class="wrapper" style="  height: 10%;">
+        <input id="searchInput" placeholder="Enter search term" class="input">
+    </div>
+
+    <script>
+    const input = document.getElementById('searchInput');
+
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const value = input.value;
+            console.log(value)
+            document.location = `index.html?query=${encodeURIComponent(value)}`;
+        }
+    });
+
+
+    </script>
+
+    <div class="wrapper">
+    <div id="albumList" class="album-list"></div>
+    </div>
+
+    <div class="wrapper" style="  height: 1%;">
+        <button id="loadMore" class="load-more" onclick="search(false)">Load More</button>
+    </div>  
+
+    <script>
+
+        let searchOffset = 0;
+
+        if (window.location.search) {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const query = urlParams.get('query');
+            if (query) {
+                document.getElementById('searchInput').value = query;
+                search();
+            }
+        }
+
+
+        async function search(clear = true) {
+            //const type = document.getElementById('searchType').value;
+            const query = document.getElementById('searchInput').value;
+            await getToken();
+
+            const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=10&offset=${searchOffset}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await res.json();
+
+            const albums = data.albums.items.filter(a => a.album_type === 'album');
+            displayAlbums(albums,clear);
+            searchOffset += 10;
+            document.getElementById('loadMore').style.display = 'block';
+        }
+
+        function displayAlbums(albums, clear) {
+            const list = document.getElementById('albumList');
+            if (clear) {
+                list.innerHTML = '';
+            }
+            albums.forEach((album, index) => {
+                ratingPercent = 50
+
+
+                let rating = `<span class="click-rate">Click to rate</span>`;
+                if (localStorage.getItem(album.id)) {
+                    console.log(localStorage.getItem(album.id));
+                    ratingPercent = JSON.parse(localStorage.getItem(album.id)).rating;
+                    rating = `Rating: <span class="rating-value" style="color: ${colorFromRating(ratingPercent)}">${ratingPercent}%</span>`;
+                }
+                const div = document.createElement('div');
+                div.className = 'album';
+                div.innerHTML = `
+                    <button onclick="selectAlbum('${album.id}', '${album.name}', '${album.artists[0].name}')" ">
+                        <div class="album-wrapper">
+                        <img src="${album.images[0].url}" alt="${album.name}">
+                        <div class="overlay-text">
+                            <div class="album-title">${album.name}</div>
+                            <div class="artist-name">${album.artists[0].name}</div>
+                            <div class="rating-label">
+                            ${rating}
+                            </div>
+                        </div>
+                        </div>
+                    </button>
+                `;
+                list.appendChild(div);
+            });
+            if (clear) {
+
+            }
+        }
+
+        async function selectAlbum(id, name, artist) {
+            document.location = `rate.html?id=${id}&name=${encodeURIComponent(name)}&artist=${encodeURIComponent(artist)}`;
+        }
+    </script>
+    
+</body>
+</html>
