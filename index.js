@@ -1,5 +1,5 @@
-const clientId = '8f3a3b4d5c044c898f07657fa8c7667e';
-const clientSecret = 'dec9085a8a124e65809e504eb5293290';
+const clientId = 'fa5c2b784b544cc9b24dc06736089fa0';
+const clientSecret = '1cd1ad4867fe4db9815f78cd2bd8493e';
 let token = "";
 
 async function getToken() {

@@ -22,8 +22,8 @@
 
     input.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
-            const value = input.value;
-            console.log(value)
+            const value = input.value.replace(`'`, '');
+
             document.location = `index.html?query=${encodeURIComponent(value)}`;
         }
     });
@@ -38,6 +38,14 @@
     <div class="wrapper" style="  height: 1%;">
         <button id="loadMore" class="load-more" onclick="search(false)">Load More</button>
     </div>  
+
+   <div style="height: 10%;"></div>
+
+    <footer class="footer">
+        <p>Made by <a href="https://github.com/UntitledOutput" target="_blank" rel="noopener">UntitledOutput</a></p>
+        <div style="width: 10%;"></div>
+        <p><a href="https://developer.spotify.com" target="_blank" rel="noopener">Using Spotify Web API </a></p>
+    </footer>
 
     <script>
 
@@ -59,14 +67,16 @@
             const query = document.getElementById('searchInput').value;
             await getToken();
 
-            const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=10&offset=${searchOffset}`, {
+            const loadAmount = 20;
+
+            const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=${loadAmount}&offset=${searchOffset}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();
 
             const albums = data.albums.items.filter(a => a.album_type === 'album');
             displayAlbums(albums,clear);
-            searchOffset += 10;
+            searchOffset += loadAmount;
             document.getElementById('loadMore').style.display = 'block';
         }
 
@@ -78,10 +88,11 @@
             albums.forEach((album, index) => {
                 ratingPercent = 50
 
+                album.name = album.name.replace(`'`, '');
+
 
                 let rating = `<span class="click-rate">Click to rate</span>`;
                 if (localStorage.getItem(album.id)) {
-                    console.log(localStorage.getItem(album.id));
                     ratingPercent = JSON.parse(localStorage.getItem(album.id)).rating;
                     rating = `Rating: <span class="rating-value" style="color: ${colorFromRating(ratingPercent)}">${ratingPercent}%</span>`;
                 }

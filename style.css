@@ -1,7 +1,8 @@
 html *
 {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: 'Arial', sans-serif;
     color: white;
+    opacity: 1;
 }
 
 .input {
@@ -14,6 +15,66 @@ html *
     height: 100%;
     text-align: center;
     font-size: 1rem;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.rating-popup {
+    display: flex;
+    width: 25%;
+    height: auto;
+    margin-top: auto;
+    margin-bottom: 3%;
+    position:fixed;
+
+    bottom: 0;
+    background-color: #202020;
+    box-shadow: 0 0 5px 5px #0000005c;
+    border-radius: 1rem;
+    z-index: 1;
+
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.rating-popup .album-rating {
+    width: 100%;
+    margin-bottom: 1%;
+    margin-top: 5%;
+}
+
+.rating-popup a {
+    margin-bottom: 5%;
 }
 
 .submitbtn {
@@ -41,17 +102,55 @@ h1 {
     padding-top: 5%;
 }
 
+.rate-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 75%;
+    height: auto;
+    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit:scale-down;
+}
+
 .wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.album-head {
+    display: flex;
+    width: 100%;
+    height:75%;
+    position: fixed;
+    margin: 0%;
+    z-index: -1;
+}
+
+.album-head img {
+    margin: 0%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+
+    opacity: 1.0;
+    -webkit-filter: blur(0px);
+    -moz-filter: blur(0px);
+    -o-filter: blur(0px);
+    -ms-filter: blur(0px);
+    filter: blur(0px);
+}
 
 .album-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    gap: 1rem;
     padding: 1rem;
     width:80%;
 }
@@ -65,76 +164,86 @@ h1 {
 }
 
 
-.cover-wrapper {
-  position: fixed;
-  justify-content: left;
-  width: 30%;
-  padding:7.5%;
-  float: left;
-  align-items: top;
-  align-content: top;
-  align-self: top;
-  height: 100%;
-  margin-top: -7.5rem;
+.album-info {
+    width: 100%;
+    height: auto;
+    align-items: center;
+    justify-content: center;
 }
 
 header {
     z-index: 1000;
 }
 
-.wrapper a {
-    text-align: center;
-    color: #ffffff;
-    font-weight: normal;
-    margin-top: -1rem;
-    font-size: 1.2rem;
+
+.album-info img {
+    max-width: 75%;
+    max-height:50%;
+    min-width: 25%;
+    min-height: 25%;
+    width: auto;
+    object-fit:scale-down;
 }
 
-.cover-wrapper img {
-    width: 100%;
-    height: auto;
-
-
-
-    border-radius: 10%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.cover-wrapper h2 {
+.album-info .album-title {
+    display: block;
     text-align: center;
+    justify-self: center;
+    margin-left: auto;
+    margin-right: auto;
     color: #ffffff;
 
+
+    margin: 0.5rem;
     height:auto;
-    margin-top: 0.5rem;
-    font-size: 2.rem;
+
+    font-size: 2.5rem;
 }
 
-.cover-wrapper h3 {
+.album-info .artist-name {
     text-align: center;
     color: #ffffff;
     font-weight: normal;
-    margin-top: -1rem;
-    font-size: 1.5rem;
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 2.5rem;
 }
 
-.cover-wrapper P {
-    text-align: center;
+.album-info .play-button {
+    display: block;
+    width: 100%;
+    height: 3rem;
+    background-color: #4fbe39; 
     color: #ffffff;
-    font-weight: normal;
-    margin-top: -1rem;
+    border: none;
+    border-radius: 5px;
     font-size: 1.2rem;
+    cursor: pointer;
+    text-align: center;
+    line-height: 3rem; 
+
+}
+
+.album-info .brk {
+    display: block;
+    height: 1%;
 }
 
 .track-rating {
     display:block;
-    align-items: right;
-    justify-content: right;
+    align-items: center;
+    justify-content: center;
     margin-top: 1rem;
     color: #ffffff;
     margin-left: auto;
-    margin-right: 10%;
-    width: 45%;
-    float: right;
+    margin-right: auto;
+    width: 100%;
+    float: center;
+}
+
+.track-rating-item {
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .album {
@@ -162,6 +271,14 @@ header {
     border-radius: 10px;
 }
 
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
 
 .load-more {
     display: none;
@@ -208,7 +325,7 @@ header {
 .artist-name {
     font-size: 0.95rem;
     margin-bottom: 0.75rem;
-    opacity: 0.9;
+    opacity: 1.0;
 }
 
 .rating-label {
@@ -237,7 +354,7 @@ header {
 }
 
 
-@media (max-width: 600px) {
+@media screen and (min-width: 1000px) {
 
 
     .album-title {
@@ -254,5 +371,16 @@ header {
 
     .click-rate {
         font-size: 0.75rem;
+    }
+
+    .album-rating {
+        font-size: 2.5vw;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+
+    .album-rating {
+        font-size: 5.5vw;
     }
 }
